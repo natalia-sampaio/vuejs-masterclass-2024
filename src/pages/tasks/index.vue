@@ -3,20 +3,36 @@ import { supabase } from '@/lib/supabaseClient';
 import type { Tables } from 'database/types';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { RouterLink } from 'vue-router';
+import type { QueryData } from '@supabase/supabase-js';
 
-const tasks = ref<Tables<'tasks'>[] | null>(null);
+usePageStore().pageData.title = 'My tasks';
 
-(async () => {
-    const { data, error } = await supabase.from('tasks').select();
+// https://supabase.com/docs/reference/javascript/typescript-support#response-types-for-complex-queries
+
+const tasksWithProjectQuery = supabase.from('tasks').select(`
+        *,
+        projects (
+            id,
+            name,
+            slug
+        )
+    `);
+
+type TasksWithProjects = QueryData<typeof tasksWithProjectQuery>;
+
+const tasks = ref<TasksWithProjects | null>(null);
+
+async function getTasks() {
+    const { data, error } = await tasksWithProjectQuery;
 
     if (error) console.log(error);
 
     tasks.value = data;
+}
 
-    console.log(tasks.value);
-})();
+await getTasks();
 
-const columns: ColumnDef<Tables<'tasks'>>[] = [
+const columns: ColumnDef<TasksWithProjects[0]>[] = [
     {
         accessorKey: 'name',
         header: () => h('div', { class: 'text-left' }, 'Name'),
@@ -46,10 +62,19 @@ const columns: ColumnDef<Tables<'tasks'>>[] = [
         }
     },
     {
-        accessorKey: 'project_id',
+        accessorKey: 'projects',
         header: () => h('div', { class: 'text-left' }, 'Project'),
         cell: ({ row }) => {
-            return h('div', { class: 'text-left font-medium' }, row.getValue('project_id'));
+            return row.original.projects
+                ? h(
+                      RouterLink,
+                      {
+                          to: `/projects/${row.original.projects.slug}`,
+                          class: 'text-left font-medium hover:bg-muted block w-full'
+                      },
+                      () => row.original.projects?.name
+                  )
+                : '';
         }
     },
     {

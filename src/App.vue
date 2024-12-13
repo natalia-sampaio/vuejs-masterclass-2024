@@ -4,6 +4,13 @@ import { RouterView } from 'vue-router';
 
 <template>
     <AuthLayout>
-        <RouterView />
+        <RouterView v-slot="{ Component, route }">
+            <Suspense v-if="Component" :timeout="0">
+                <component :is="Component" :key="route.name"></component>
+                <template #fallback>
+                    <span>Loading...</span>
+                </template>
+            </Suspense>
+        </RouterView>
     </AuthLayout>
 </template>
