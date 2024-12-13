@@ -13,14 +13,14 @@
         "format": "prettier --write src/",
         "supabase:init": "supabase init",
         "supabase:login": "supabase login",
-        "supabase:link": "supabase link --project-ref daspxsqwcpdfbvmjcgzh",
+        "supabase:link": "supabase link --project-ref ivvmpgnhghbnzdieyxnk",
         "db:migrate:new": "supabase migration new",
         "db:reset": "supabase db reset --linked",
         "db:seed": "node --env-file=.env database/seed.js",
-        "supabase:types": "npx supabase gen types typescript --project-id daspxsqwcpdfbvmjcgzh --schema public > database/types.ts"
+        "supabase:types": "npx supabase gen types typescript --project-id ivvmpgnhghbnzdieyxnk --schema public > database/types.ts"
     },
     "dependencies": {
-        "@supabase/supabase-js": "^2.43.5",
+        "@supabase/supabase-js": "^2.47.6",
         "@tanstack/vue-table": "^8.20.2",
         "@vueuse/core": "^10.11.0",
         "class-variance-authority": "^0.7.0",
@@ -32,7 +32,7 @@
         "tailwind-merge": "^2.4.0",
         "tailwindcss-animate": "^1.0.7",
         "vue": "^3.4.21",
-        "vue-router": "^4.3.0"
+        "vue-router": "^4.5.0"
     },
     "devDependencies": {
         "@faker-js/faker": "^8.4.1",
@@ -48,10 +48,12 @@
         "eslint-plugin-vue": "^9.23.0",
         "npm-run-all2": "^6.1.2",
         "prettier": "^3.2.5",
-        "supabase": "^1.176.10",
+        "supabase": "^1.226.4",
         "tailwindcss": "^3.4.8",
         "typescript": "~5.4.0",
-        "unplugin-vue-router": "^0.9.1",
+        "unplugin-auto-import": "^0.19.0",
+        "unplugin-vue-components": "^0.27.5",
+        "unplugin-vue-router": "^0.10.1",
         "vite": "^5.2.8",
         "vue-tsc": "^2.0.11"
     }
