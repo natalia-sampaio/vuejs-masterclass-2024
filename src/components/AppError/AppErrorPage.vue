@@ -27,30 +27,26 @@ if (error.value && 'code' in error.value) {
     statusCode.value = error.value.statusCode ?? 0;
 }
 
+const ErrorTemplate = import.meta.env.DEV
+    ? defineAsyncComponent(() => import('./AppErrorDevSection.vue'))
+    : defineAsyncComponent(() => import('./AppErrorProdSection.vue'));
+
 router.afterEach(() => {
-    errorStore.activeError = null;
+    errorStore.clearError();
 });
 </script>
 <template>
     <section class="error">
-        <div>
-            <iconify-icon icon="lucide:triangle-alert" class="error__icon" />
-            <h1 class="error__code">{{ customCode || code }}</h1>
-            <p class="error__status" v-if="statusCode">Status code: {{ statusCode }}</p>
-            <p class="error__msg">{{ message }}</p>
-            <p v-if="hint">Hint: {{ hint }}</p>
-            <p v-if="details">Details: {{ details }}</p>
-            <div class="error__stack" v-if="stack">
-                <h3>Stack:</h3>
-                <p>{{ stack }}</p>
-            </div>
-            <div class="error-footer">
-                <p class="error-footer__text">You'll find lots to explore on the home page.</p>
-                <RouterLink to="/">
-                    <Button class="max-w-36"> Back to homepage </Button>
-                </RouterLink>
-            </div>
-        </div>
+        <ErrorTemplate
+            :message
+            :customCode
+            :code
+            :statusCode
+            :hint
+            :details
+            :stack
+            :isCustomError="errorStore.isCustomError"
+        />
     </section>
 </template>
 <style scoped>
@@ -58,47 +54,47 @@ router.afterEach(() => {
     @apply mx-auto flex justify-center items-center flex-1 p-10 text-center -mt-20 min-h-[90vh];
 }
 
-.error__icon {
+:deep(.error__icon) {
     @apply text-7xl text-destructive;
 }
 
-.error__code {
+:deep(.error__code) {
     @apply font-extrabold text-7xl text-secondary;
 }
 
-.error__status {
+:deep(.error__status) {
     @apply font-bold text-5xl text-secondary;
 }
 
-.error__msg {
-    @apply text-3xl font-bold text-primary;
+:deep(.error__msg) {
+    @apply text-3xl font-bold text-primary first-letter:capitalize;
 }
 
-.error__stack {
+:deep(.error__stack) {
     @apply text-left whitespace-pre-wrap font-mono leading-10 bg-secondary rounded-xl;
-
-    h3 {
-        @apply border-b border-background p-4;
-    }
-
-    p {
-        @apply p-4;
-    }
-
-    p:first-line {
-        @apply bg-background;
-    }
 }
 
-.error-footer {
+:deep(.error__stack h3) {
+    @apply border-b border-background p-4;
+}
+
+:deep(.error__stack p) {
+    @apply p-4;
+}
+
+:deep(.error__stack p:first-line) {
+    @apply bg-background;
+}
+
+:deep(.error-footer) {
     @apply flex flex-col items-center justify-center gap-5 mt-6 font-light;
 }
 
-.error-footer__text {
+:deep(.error-footer__text) {
     @apply text-lg text-muted-foreground;
 }
 
-p {
+:deep(p) {
     @apply my-2;
 }
 </style>
