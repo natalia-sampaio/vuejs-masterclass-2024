@@ -51,3 +51,7 @@ export function taskQuery(id: string) {
         .single();
 }
 export type Task = QueryData<ReturnType<typeof taskQuery>>;
+
+export function profileQuery(id: string) {
+    return supabase.from('profiles').select().eq('id', id).single();
+}
